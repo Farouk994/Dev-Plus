@@ -4,6 +4,7 @@ const router = express.Router();
 const auth = require("../../middleware/auth");
 const Profile = require("../../models/Profile");
 const User = require("../../models/User");
+const { route } = require("./auth");
 // const { check, validatorResult } = require("express-validator");
 
 // @route GET api/users
@@ -101,5 +102,19 @@ router.post(
     res.send("Profile Created");
   }
 );
+
+router.get("/user/:user_id",async (req,res)=>{
+    try{
+      const profile = await Profile.findOne({ user : req.params.user_id}).populate('users',['name','avatar'])
+      res.json(profile);if(!profile){
+        res.status(400).json({msg : "There is no profile for this user"})
+      }
+
+
+    } catch(err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+});
 
 module.exports = router;
