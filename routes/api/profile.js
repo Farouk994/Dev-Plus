@@ -197,6 +197,7 @@ router.put(
     [
       check("title", "Title is empty").not().isEmpty(),
       check("company", "Company is empty").not().isEmpty(),
+      check("from", "From Date is Required").not().isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -242,12 +243,13 @@ router.put(
 // @desc Delete experience from profile
 // @access Private
 
+FIXME:
 router.delete("/experience/:exp_id", auth, async (req, res) => {
   try {
     // Get profile of the logged In User
     const profile = await Profile.findOne({ user: req.user.id });
 
-    // Get remove index / Map through the array and return id and chain onto it 
+    // Get remove index / Map through the array and return id and chain onto it
     // and match the id that we passed in on the experience/:exp_id
     const removeIndex = profile.experience
       .map((item) => {
@@ -255,9 +257,9 @@ router.delete("/experience/:exp_id", auth, async (req, res) => {
       })
       .indexOf(req.params.exp_id);
 
-      // Splice takes an experince from the array according to its index and 
-      // i instructed it to only remove one
-    profile.experience.splice(removeIndex,1);
+    // Splice takes an experince from the array according to its index and
+    // i instructed it to only remove one
+    profile.experience.splice(removeIndex, 1);
 
     await profile.save();
 
@@ -268,6 +270,86 @@ router.delete("/experience/:exp_id", auth, async (req, res) => {
   }
 });
 
+// @route api/profile/education/
 
+router.put(
+  "/education",
+  [
+    auth,
+    [
+      check("school", "School is required").not().isEmpty(),
+      check("degree", "Degree is required").not().isEmpty(),
+      check("fieldofstudy", "Field of Study is required").not().isEmpty(),
+      check("from", "From Date is required").not().isEmpty(),
+    ],
+  ],
+  async (req, res) => {
+    // Validate the user input with the validation error var
+    const errors = validationResult(req);
+    if (!errors.isEmpty) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    // Get info from the user using obj destructuring
+    const { school, degree, fieldofstudy, from, to, current, description } =
+      req.body;
+
+    // This will create an obj that the user submits
+    const newEdu = {
+      school,
+      degree,
+      fieldofstudy,
+      from,
+      to,
+      current,
+      description,
+    };
+
+    // Now we start to deal with MongoDB
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+
+      // unshift pushes the new experience at the beginning so that most recent is first
+      profile.education.unshift(newEdu);
+
+      await profile.save();
+
+      res.json(profile);
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).send("Server Error");
+    }
+  }
+);
+
+// @route DELETE api/profile/education/:edu_id
+// @desc Delete education from profile
+// @access Private
+
+FIXME:
+router.delete("/education/:edu_id", auth, async (req, res) => {
+  try {
+    // Get profile of the logged In User
+    const profile = await Profile.findOne({ user: req.user.id });
+    // console.log()
+
+    // Get remove index / Map through the array and return id and chain onto it
+    // and match the id that we passed in on the education/:exp_id
+    const removeIndex = profile.education
+      .map((item) => item.id)
+      .indexOf(req.params.edu_id);
+
+    // Splice takes an education from the array according to its index and
+    // i instructed it to only remove one
+    profile.education.splice(removeIndex, 1);
+
+    await profile.save();
+
+    res.json(profile);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Server Error");
+  }
+});
 
 module.exports = router;
