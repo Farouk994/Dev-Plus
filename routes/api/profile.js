@@ -67,7 +67,7 @@ router.post(
       location,
       company,
       bio,
-      experience
+      experience,
     } = req.body;
 
     // Build Profile Obj
@@ -143,9 +143,9 @@ router.get("/", async (req, res) => {
   }
 });
 
-// @route GET specific user
-// @route /user/:user_id
-// @route Public
+// @route GET api/profile/user/:user_id
+// @desc  Get specific user
+// @access Public
 router.get("/user/:user_id", async (req, res) => {
   try {
     const profile = await Profile.findOne({
@@ -187,55 +187,87 @@ router.delete("/", auth, async (req, res) => {
 });
 
 // @route appi/profile/experience
-// @route make a PUT request
+// @desc make a PUT request
 // @access Private
 
-router.put("/experience", [auth, [
-   check("title","Title is empty").not().isEmpty(),
-   check("company","Company is empty").not().isEmpty()
-]], async (req, res) => {
-  // Validate the user input with the validation error var
-  const errors  = validationResult(req);
-  if(!errors.isEmpty){
-    return res.status(400).json({errors : errors.array()});
-  }
+router.put(
+  "/experience",
+  [
+    auth,
+    [
+      check("title", "Title is empty").not().isEmpty(),
+      check("company", "Company is empty").not().isEmpty(),
+    ],
+  ],
+  async (req, res) => {
+    // Validate the user input with the validation error var
+    const errors = validationResult(req);
+    if (!errors.isEmpty) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-  // Get info from the user using obj destructuring
-  const {
-    title,
-    company,
-    location,
-    from,
-    to,
-    current,
-    description
-  } = req.body;
+    // Get info from the user using obj destructuring
+    const { title, company, location, from, to, current, description } =
+      req.body;
 
-  // This will create an obj that the user submits
-  const newExp = {
-    title,
-    company,
-    location,
-    from,
-    to,
-    current,
-    description
-  };
+    // This will create an obj that the user submits
+    const newExp = {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current,
+      description,
+    };
 
-  // Now we start to deal with MongoDB
-  try{
-   const profile = await Profile.findOne({ user : req.user.id });
+    // Now we start to deal with MongoDB
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
 
-   // unshift pushes the new experience at the beginning so that most recent is first
-   profile.experience.unshift(newExp);
+      // unshift pushes the new experience at the beginning so that most recent is first
+      profile.experience.unshift(newExp);
 
-   await profile.save();
+      await profile.save();
 
-   res.json(profile)
-  }catch(err){
+      res.json(profile);
+    } catch (err) {
       console.log(err.message);
-      res.status(500).send('Server Error')
+      res.status(500).send("Server Error");
+    }
+  }
+);
+
+// @route DELETE api/profile/experience/:exp_id
+// @desc Delete experience from profile
+// @access Private
+
+router.delete("/experience/:exp_id", auth, async (req, res) => {
+  try {
+    // Get profile of the logged In User
+    const profile = await Profile.findOne({ user: req.user.id });
+
+    // Get remove index / Map through the array and return id and chain onto it 
+    // and match the id that we passed in on the experience/:exp_id
+    const removeIndex = profile.experience
+      .map((item) => {
+        item.id;
+      })
+      .indexOf(req.params.exp_id);
+
+      // Splice takes an experince from the array according to its index and 
+      // i instructed it to only remove one
+    profile.experience.splice(removeIndex,1);
+
+    await profile.save();
+
+    res.json(profile);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Server Error");
   }
 });
+
+
 
 module.exports = router;
