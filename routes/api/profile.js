@@ -10,24 +10,24 @@ const { route } = require("./auth");
 // @route GET api/profile/me
 // @ route Private
 // Get user profile
-router.get('/me', auth, async (req, res) => {
+router.get("/me", auth, async (req, res) => {
   try {
-    // User can access their account with the token and we 
+    // User can access their account with the token and we
     // populate the response with their names and avatar
     const profile = await Profile.findOne({
-      user: req.user.id
-    }).populate('user', ['name', 'avatar'], User);
+      user: req.user.id,
+    }).populate("user", ["name", "avatar"], User);
 
     // If not profile we get an error that user doesn't exist
     if (!profile) {
-      return res.status(400).json({ msg: 'There is no profile for this user' });
+      return res.status(400).json({ msg: "There is no profile for this user" });
     }
 
     // Send json file with response(profile)
     res.json(profile);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).send("Server Error");
   }
 });
 
@@ -51,8 +51,8 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    // This is obj destructuring that enables MongoDB 
-    // handle multiple req from the body and update the the profile model which 
+    // This is obj destructuring that enables MongoDB
+    // handle multiple req from the body and update the the profile model which
     // is now linked to the user model
     const {
       website,
@@ -67,13 +67,14 @@ router.post(
       location,
       company,
       bio,
+      experience
     } = req.body;
 
     // Build Profile Obj
-    // Whateva the user sends will be stored in this obj that we will be using 
+    // Whateva the user sends will be stored in this obj that we will be using
     // to update the user profile
     const profileFields = {};
-    // get User.id => connect the user input info to the user id 
+    // get User.id => connect the user input info to the user id
     profileFields.user = req.user.id;
     if (company) profileFields.company = company;
     if (website) profileFields.website = website;
@@ -101,8 +102,8 @@ router.post(
 
     // Now lets connect to the Mongo Database
     try {
-      // This statement is basically saying that findOne User(withToken, userID) and if its 
-      // that specific users profile, (findOneAndUpdate) with the profilefields obj 
+      // This statement is basically saying that findOne User(withToken, userID) and if its
+      // that specific users profile, (findOneAndUpdate) with the profilefields obj
       let profile = await Profile.findOne({ user: req.user.id });
       if (profile) {
         profile = await Profile.findOneAndUpdate(
@@ -130,7 +131,11 @@ router.post(
 // Route for finding all user Profiles
 router.get("/", async (req, res) => {
   try {
-    const profile = await User.find().populate("user", ["name", "avatar"], User);
+    const profile = await User.find().populate(
+      "user",
+      ["name", "avatar"],
+      User
+    );
     res.json(profile);
   } catch (err) {
     console.log(err.message);
@@ -145,7 +150,7 @@ router.get("/user/:user_id", async (req, res) => {
   try {
     const profile = await Profile.findOne({
       user: req.params.user_id,
-      // Get User Profile 
+      // Get User Profile
     }).populate("users", ["name", "avatar"]);
     res.json(profile);
     if (!profile) {
@@ -170,14 +175,66 @@ router.delete("/", auth, async (req, res) => {
     await Promise.all([
       // Post.deleteMany({ user: req.user.id }),
       Profile.findOneAndRemove({ user: req.user.id }),
-      User.findOneAndRemove({ _id: req.user.id })
+      User.findOneAndRemove({ _id: req.user.id }),
     ]);
-    
+
     res.json({ msg: "User has been Deleted" });
-    console.log("User has been deleted")
+    console.log("User has been deleted");
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Server Error");
+  }
+});
+
+// @route appi/profile/experience
+// @route make a PUT request
+// @access Private
+
+router.put("/experience", [auth, [
+   check("title","Title is empty").not().isEmpty(),
+   check("company","Company is empty").not().isEmpty()
+]], async (req, res) => {
+  // Validate the user input with the validation error var
+  const errors  = validationResult(req);
+  if(!errors.isEmpty){
+    return res.status(400).json({errors : errors.array()});
+  }
+
+  // Get info from the user using obj destructuring
+  const {
+    title,
+    company,
+    location,
+    from,
+    to,
+    current,
+    description
+  } = req.body;
+
+  // This will create an obj that the user submits
+  const newExp = {
+    title,
+    company,
+    location,
+    from,
+    to,
+    current,
+    description
+  };
+
+  // Now we start to deal with MongoDB
+  try{
+   const profile = await Profile.findOne({ user : req.user.id });
+
+   // unshift pushes the new experience at the beginning so that most recent is first
+   profile.experience.unshift(newExp);
+
+   await profile.save();
+
+   res.json(profile)
+  }catch(err){
+      console.log(err.message);
+      res.status(500).send('Server Error')
   }
 });
 
