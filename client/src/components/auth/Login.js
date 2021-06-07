@@ -1,33 +1,76 @@
 import React from "react";
+import { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
+// import axios from "axios";
 
 const Login = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    password2: "",
+  });
+
+  const { email, password } = formData;
+
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    console.log("SUCCESS");
+  };
   return (
-    <div>
-      <section class='container'>
-        <div class='alert alert-danger'>Invalid credentials</div>
-        <h1 class='large text-primary'>Sign In</h1>
-        <p class='lead'>
-          <i class='fas fa-user'></i> Sign into Your Account
+    <Fragment>
+      <section className='container'>
+        <h1 className='large text-primary'>Sign In</h1>
+        <p className='lead'>
+          <i className='fas fa-user'></i>Sign into your Account
         </p>
-        <form class='form' action='dashboard.html'>
-          <div class='form-group'>
+        <form className='form' onSubmit={(e) => onSubmit(e)}>
+          <div className='form-group'>
+            <input
+              type='text'
+              placeholder='Name'
+              name='name'
+            //   value={name}
+              onChange={(e) => onChange(e)}
+              onSubmit={(e) => onSubmit(e)}
+              required
+            />
+          </div>
+          <div className='form-group'>
             <input
               type='email'
               placeholder='Email Address'
               name='email'
+              value={email}
+              onChange={(e) => onChange(e)}
               required
             />
+            {/* <small className='form-text'>
+              This site uses Gravatar so if you want a profile image, use a
+              Gravatar email
+            </small> */}
           </div>
-          <div class='form-group'>
-            <input type='password' placeholder='Password' name='password' />
+          <div className='form-group'>
+            <input
+              type='password'
+              placeholder='Password'
+              name='password'
+              minLength='6'
+              value={password}
+              onChange={(e) => onChange(e)}
+            />
           </div>
-          <input type='submit' class='btn btn-primary' value='Login' />
+        
+          <input type='submit' className='btn btn-primary' value='Login' />
         </form>
-        <p class='my-1'>
-          Don't have an account? <a href='register.html'>Sign Up</a>
+        <p className='my-1'>
+          Don't have an account? <Link to='/register'>Sign Up</Link>
         </p>
       </section>
-    </div>
+    </Fragment>
   );
 };
 
