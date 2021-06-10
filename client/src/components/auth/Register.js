@@ -5,13 +5,14 @@ import { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 // Also used the setAlert Action
 import { setAlert } from "../../actions/alert";
+import { register } from "../../actions/auth";
 import PropTypes from "prop-types";
 //impt
 
 // import axios from "axios";
 
 // Made it available within props and destructured it to pull it out of the props
-const Register = ({ setAlert }) => {
+const Register = ({ setAlert, register }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,10 +29,10 @@ const Register = ({ setAlert }) => {
     e.preventDefault();
     if (password !== password2) {
       // And then called it when the passwords couldnt match
-      // and sent the message with the alert type 
+      // and sent the message with the alert type
       setAlert("Password does not Match", "danger");
     } else {
-      console.log("SUCCESS");
+      register({ name, email, password });
     }
   };
   return (
@@ -50,7 +51,7 @@ const Register = ({ setAlert }) => {
               value={name}
               onChange={(e) => onChange(e)}
               onSubmit={(e) => onSubmit(e)}
-              required
+       
             />
           </div>
           <div className='form-group'>
@@ -60,7 +61,7 @@ const Register = ({ setAlert }) => {
               name='email'
               value={email}
               onChange={(e) => onChange(e)}
-              required
+    
             />
             <small className='form-text'>
               This site uses Gravatar so if you want a profile image, use a
@@ -99,7 +100,8 @@ const Register = ({ setAlert }) => {
 
 Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
 };
 
 // Export Connect with the setAlert Action in order to use it
-export default connect(null, { setAlert })(Register);
+export default connect(null, { setAlert, register })(Register);
