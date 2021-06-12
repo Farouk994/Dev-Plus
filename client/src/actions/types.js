@@ -7,6 +7,8 @@ export const AUTH_ERROR = "AUTH_ERROR";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT = "LOGOUT;"
+export const GET_PROFILE = "GET_PROFILE;"
+export const PROFILE_ERROR = "PROFILE_ERROR;"
  
 // 1. First define types in reducer types file from actions/types
 // 2. Then send it to the same directory (types/auth) to make makes requests to backend
