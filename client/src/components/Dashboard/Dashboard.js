@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useEffect } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getCurrentProfiles } from "../../actions/profile";
@@ -22,7 +23,12 @@ const Dashboard = ({
       {profile !== null ? (
         <Fragment>has</Fragment>
       ) : (
-        <Fragment>No profile</Fragment>
+        <Fragment>
+          <h1>You have not yet setup a profile yet, please add some info</h1><br></br>
+          <Link to='/create-profile' className='btn btn-primary my-q'>
+            Create Profile
+          </Link>
+        </Fragment>
       )}
     </Fragment>
   );
