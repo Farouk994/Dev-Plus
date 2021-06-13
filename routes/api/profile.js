@@ -252,11 +252,9 @@ FIXME: router.delete("/experience/:exp_id", auth, async (req, res) => {
 
     // Get remove index / Map through the array and return id and chain onto it
     // and match the id that we passed in on the experience/:exp_id
-    const removeIndex = profile.experience
-      .map((item) => {
-        item.id;
-      })
-      .indexOf(req.params.exp_id);
+    const removeIndex = profile.education
+    .map((item) => item.id)
+    .indexOf(req.params.edu_id);
 
     // Splice takes an experince from the array according to its index and
     // i instructed it to only remove one
