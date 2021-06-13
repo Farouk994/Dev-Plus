@@ -1,14 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getCurrentProfiles } from "../../actions/profile";
+// import Spinner from "../layout/Spinner";
 
-const Dashboard = ({ getCurrentProfiles, auth, profile }) => {
+const Dashboard = ({
+  getCurrentProfiles,
+  auth: { user },
+  profile: { profile, loading },
+}) => {
   useEffect(() => {
     getCurrentProfiles();
   }, []);
-  return <div>Dashboard</div>;
+  return (
+    <Fragment>
+      <h1 className='large text-primary'>Dashboard</h1>
+      <p className='lead'>
+        <i className='fas fa-user'></i> Welcome {user && user.name}
+      </p>
+      {profile !== null ? (
+        <Fragment>has</Fragment>
+      ) : (
+        <Fragment>No profile</Fragment>
+      )}
+    </Fragment>
+  );
 };
 
 Dashboard.propTypes = {
