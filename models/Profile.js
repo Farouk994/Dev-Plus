@@ -19,7 +19,8 @@ const ProfileSchema = new Schema({
     type: String,
     required: true,
   },
-  skills: {
+// FIXME: 
+    skills: {
     type: [String],
   
   },

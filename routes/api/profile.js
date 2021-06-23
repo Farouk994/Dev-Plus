@@ -6,6 +6,7 @@ const router = express.Router();
 const auth = require("../../middleware/auth");
 const Profile = require("../../models/Profile");
 const User = require("../../models/User");
+const Post = require("../../models/Post");
 const { route } = require("./auth");
 // const { check, validatorResult } = require("express-validator");
 
@@ -253,8 +254,8 @@ FIXME: router.delete("/experience/:exp_id", auth, async (req, res) => {
     // Get remove index / Map through the array and return id and chain onto it
     // and match the id that we passed in on the experience/:exp_id
     const removeIndex = profile.education
-    .map((item) => item.id)
-    .indexOf(req.params.edu_id);
+      .map((item) => item.id)
+      .indexOf(req.params.edu_id);
 
     // Splice takes an experince from the array according to its index and
     // i instructed it to only remove one
@@ -368,7 +369,7 @@ router.get("/github/:username", (req, res) => {
     request(options, (error, response, body) => {
       if (error) console.log(error);
       if (response.statusCode !== 200) {
-       return res.status(404).json({ msg: "No Github profile found" });
+        return res.status(404).json({ msg: "No Github profile found" });
       }
       res.json(JSON.parse(body));
     });
@@ -379,3 +380,21 @@ router.get("/github/:username", (req, res) => {
 });
 
 module.exports = router;
+
+// @route DELETE api/profile/me
+// @desc Get current User profile
+// @access Private
+router.delete("/profile", auth, async (req, res) => {
+  try {
+    // Remove User Post
+    await Post.deleteMany({ user: req.user.id });
+    // Remove Profile
+    await Profile.findOneAndRemove({ user: req.user.id });
+    // Remove User
+    await User.findOneAndRemove({ _id: req.user.id });
+    res.json({ msg: "User deleted" });
+  } catch (error) {
+    console.log(err.message);
+    res.status(500).send("Server Error");
+  }
+});
