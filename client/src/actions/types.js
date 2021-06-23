@@ -12,6 +12,9 @@ export const UPDATE_PROFILE = "UPDATE_PROFILE";
 export const CLEAR_PROFILE = "CLEAR_PROFILE";
 export const PROFILE_ERROR = "PROFILE_ERROR";
 export const ACCOUNT_DELETED = "ACCOUNT_DELETED";
+export const GET_PROFILES = "GET_PROFILES";
+export const GET_REPOS = "GET_REPOS"
+
  
 // 1. First define types in reducer types file from actions/types
 // 2. Then send it to the same directory (types/auth) to make makes requests to backend
@@ -19,6 +22,5 @@ export const ACCOUNT_DELETED = "ACCOUNT_DELETED";
 
 
 // Creating or Posting
-// 1. Types
-// 2. Actions
-// 3. Reducers 
+// Actions => types,profile(dispatch)
+// Reducers =>  

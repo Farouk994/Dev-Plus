@@ -20,12 +20,12 @@ router.get("/me", auth, async (req, res) => {
     const profile = await Profile.findOne({
       user: req.user.id,
     }).populate("user", ["name", "avatar"], User);
-
+    
     // If not profile we get an error that user doesn't exist
     if (!profile) {
       return res.status(400).json({ msg: "There is no profile for this user" });
     }
-
+    
     // Send json file with response(profile)
     res.json(profile);
   } catch (err) {
@@ -34,18 +34,31 @@ router.get("/me", auth, async (req, res) => {
   }
 });
 
+// @route GET api/users
+// @DESC get PROFILE by UserID
+// @access Public
+// Route for finding all user Profiles
+TODO: router.get("/", async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate("user", ["name", "avatar"], User);
+    res.json(profiles);
+    // console.log(profiles);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server has an Error");
+  }
+});
+
+
 // @route POST or update user profile
 // @route Private
 router.post(
   "/",
-  [
-    auth,
-    [
-      // Validation of skills and status of user
-      check("status", "Status is required").not().isEmpty(),
-      check("skills", "skills is required").isEmpty(),
-    ],
-  ],
+  auth,
+  // Validation of skills and status of user
+  check("status", "Status is required").not().isEmpty(),
+  // check("skills", "skills is required").isEmpty(),
+
   async (req, res) => {
     // When using validation, its good to check for errors and return errors array
     // with the above messages
@@ -128,23 +141,6 @@ router.post(
   }
 );
 
-// @route GET api/users
-// @DESC get PROFILE by UserID
-// @access Public
-// Route for finding all user Profiles
-router.get("/", async (req, res) => {
-  try {
-    const profile = await User.find().populate(
-      "user",
-      ["name", "avatar"],
-      User
-    );
-    res.json(profile);
-  } catch (err) {
-    console.log(err.message);
-    res.status(500).send("Server Error");
-  }
-});
 
 // @route GET api/profile/user/:user_id
 // @desc  Get specific user
@@ -154,7 +150,7 @@ router.get("/user/:user_id", async (req, res) => {
     const profile = await Profile.findOne({
       user: req.params.user_id,
       // Get User Profile
-    }).populate("users", ["name", "avatar"]);
+    }).populate("User", ["name", "avatar"]);
     res.json(profile);
     if (!profile) {
       res.status(400).json({ msg: "Profile Not Found" });

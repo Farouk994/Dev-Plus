@@ -5,6 +5,7 @@ const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const config = require("config");
 const jwt = require("jsonwebtoken");
+const normalize = require('normalize-url');
 
 // Require User Model to be used for connecting routes to specific user created
 const User = require("../../models/User");
@@ -49,11 +50,14 @@ router.post(
           .send({ errors: [{ msg: "User Already Exists!!" }] });
       }
       // Get Users Gravatar
-      const avatar = gravatar.url(email, {
-        s: "200",
-        r: "pg",
-        d: "mm",
-      });
+      const avatar = normalize(
+        gravatar.url(email, {
+          s: '200',
+          r: 'pg',
+          d: 'mm'
+        }),
+        { forceHttps: true }
+      );
 
       // If user email or user doesnt exist then we can create a new one using the User model
       user = new User({
