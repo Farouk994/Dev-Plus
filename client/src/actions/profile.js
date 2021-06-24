@@ -51,7 +51,7 @@ export const getProfiles = () => async (dispatch) => {
 // FIXME: 
 export const getProfileById = (userId) => async (dispatch) => {
   try {
-    const res = await api.get(`./api/profile/user/${userId}`);
+    const res = await axios.get(`./api/profile/user/${userId}`);
     dispatch({
       type: GET_PROFILE,
       payload: res.data,
@@ -65,7 +65,7 @@ export const getProfileById = (userId) => async (dispatch) => {
 };
 
 // Get GihubRepos
-export const getGihubRepos = (username) => async (dispatch) => {
+export const getGithubRepos = (username) => async (dispatch) => {
   try {
     const res = await axios.get(`./api/profile/github/${username}`);
     dispatch({
