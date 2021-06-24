@@ -24,7 +24,7 @@ const CreateProfile = ({ createProfile, history}) => {
     website,
     location,
     status,
-    skills,
+    // skills,
     githubusername,
     bio,
     twitter,

@@ -13,7 +13,7 @@ const Profiles = ({ getProfiles, profile: { profiles } }) => {
     <Fragment>
       <h1 className='large text-primary'>Developers</h1>
       <p className='lead'>
-        <i className='fab fa-connectdevelop'/>
+        <i className='fas fa-users'/>{' '}
         Browse and Connect with developers
       </p>
       <div className='profiles'>

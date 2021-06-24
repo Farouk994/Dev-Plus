@@ -9,7 +9,7 @@ import {
   CLEAR_PROFILE,
   ACCOUNT_DELETED,
   GET_PROFILES,
-  GET_REPOS
+  // GET_REPOS
 } from "./types";
 
 // Get current user profiles
@@ -29,7 +29,7 @@ export const getCurrentProfiles = () => async (dispatch) => {
 };
 
 // Get All profiles
-// FIXME: 
+
 export const getProfiles = () => async (dispatch) => {
   dispatch({ type: CLEAR_PROFILE });
   
@@ -48,9 +48,10 @@ export const getProfiles = () => async (dispatch) => {
 };
 
 // Get Profile
+// FIXME: 
 export const getProfileById = (userId) => async (dispatch) => {
   try {
-    const res = await axios.get(`./api/profile/user/${userId}`);
+    const res = await api.get(`./api/profile/user/${userId}`);
     dispatch({
       type: GET_PROFILE,
       payload: res.data,
@@ -207,7 +208,7 @@ export const deleteEducation = (id) => async (dispatch) => {
 export const deleteAccount = () => async (dispatch) => {
   if (window.confirm("Are you sure? This cannot be undone")) {
     try {
-      const res = await axios.delete(`/api/profile`);
+      await axios.delete(`/api/profile`);
       dispatch({
         type: CLEAR_PROFILE,
       });
