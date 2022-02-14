@@ -1,4 +1,5 @@
-import { SET_ALERT, REMOVE_ALERT } from "../actions/types";
+import { SET_ALERT, REMOVE_ALERT } from '../actions/types';
+
 const initialState = [];
 
 function alertReducer(state = initialState, action) {
@@ -6,7 +7,6 @@ function alertReducer(state = initialState, action) {
 
   switch (type) {
     case SET_ALERT:
-      // Added the alert type from actions to the array
       return [...state, payload];
     case REMOVE_ALERT:
       return state.filter((alert) => alert.id !== payload);
