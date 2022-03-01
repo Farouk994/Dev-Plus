@@ -21,7 +21,7 @@ import {
 // Get posts
 export const getPosts = () => async (dispatch) => {
   try {
-    const res = await api.get('/posts');
+    const res = await api.get('/posts/all');
 
     dispatch({
       type: GET_POSTS,
@@ -91,7 +91,7 @@ export const deletePost = (id) => async (dispatch) => {
 // Add post
 export const addPost = (formData) => async (dispatch) => {
   try {
-    const res = await api.post('/posts', formData);
+    const res = await api.post('/posts/new', formData);
 
     dispatch({
       type: ADD_POST,

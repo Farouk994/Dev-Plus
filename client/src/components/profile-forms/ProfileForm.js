@@ -15,7 +15,7 @@ import { LoadingOutlined, CameraOutlined } from '@ant-design/icons';
 const initialState = {
   company: '',
   website: '',
-  image: '',
+  // image: '',
   location: '',
   status: '',
   skills: '',
