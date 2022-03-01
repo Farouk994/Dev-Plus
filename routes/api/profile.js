@@ -50,6 +50,7 @@ router.post(
   auth,
   check('status', 'Status is required').notEmpty(),
   check('skills', 'Skills is required').notEmpty(),
+  check('image', 'Image is required').notEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -61,6 +62,7 @@ router.post(
       website,
       skills,
       youtube,
+      image,
       twitter,
       instagram,
       linkedin,
@@ -72,6 +74,7 @@ router.post(
     // build a profile
     const profileFields = {
       user: req.user.id,
+      image: image,
       website:
         website && website !== ''
           ? normalize(website, { forceHttps: true })
@@ -100,7 +103,8 @@ router.post(
         { $set: profileFields },
         { new: true, upsert: true, setDefaultsOnInsert: true }
       );
-      return res.json(profile);
+      res.json(profile);
+      console.log(profile.image);
     } catch (err) {
       console.error(err.message);
       return res.status(500).send('Server Error');
@@ -299,8 +303,8 @@ router.post(
         url: result.secure_url,
         public_id: result.public_id
       });
-      console.log(req.body);
-      console.log(result);
+      // console.log(req.body);
+      // console.log(result);
     } catch (err) {
       console.log(err.message);
       // res.status(500).send('Server Error');

@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile, getCurrentProfile } from '../../actions/profile';
 import axios from 'axios';
+import { Avatar } from 'antd';
+import { LoadingOutlined, CameraOutlined } from '@ant-design/icons';
 
 /*
   NOTE: declare initialState outside of component
@@ -68,6 +70,7 @@ const ProfileForm = ({
   const {
     company,
     website,
+    image,
     location,
     status,
     skills,
@@ -79,6 +82,7 @@ const ProfileForm = ({
     youtube,
     instagram
   } = formData;
+  console.log(formData);
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -90,27 +94,33 @@ const ProfileForm = ({
 
   const handleImage = async (e) => {
     const file = e.target.files[0];
-    let formData = new FormData();
-    formData.append('image', file);
+    let imgData = new FormData();
+    imgData.append('image', file);
     // formData.append("content", content);
-    console.log([...formData]);
+    console.log([...imgData]);
     setUploading(true);
     try {
       const { data } = await axios.post(
         'http://localhost:5000/api/profile/upload-image',
-        formData
+        imgData
       );
       // console.log(data);
       setLogo({
         url: data.url,
         public_id: data.public_id
       });
+      console.log(imgData);
       setUploading(false);
     } catch (err) {
       console.log(err.message);
       setUploading(false);
     }
   };
+  // console.log(handleImage)
+
+  // const handleFormImage = (e) => {
+
+  // }
 
   return (
     <section className="container">
@@ -212,6 +222,32 @@ const ProfileForm = ({
           <small className="form-text">Tell us a little about yourself</small>
         </div>
 
+        {/* FIXME: */}
+        <label>
+          <div>Upload Image</div>
+          {logo && logo.url ? (
+            <Avatar
+              size={64}
+              src={logo.url}
+              className="mt-1"
+              style={{ width: '50px', borderRadius: '50%' }}
+            />
+          ) : uploading ? (
+            <LoadingOutlined className="mt-2" />
+          ) : (
+            <CameraOutlined className="mt-2 p-2" />
+          )}
+          <input
+            type="file"
+            className="btn btn-primary my-1"
+            onChange={(e) => {
+              handleImage(e);
+              onChange(e);
+            }}
+            value={image}
+          />
+        </label>
+
         <div className="my-2">
           <button
             onClick={() => toggleSocialInputs(!displaySocialInputs)}
@@ -282,16 +318,16 @@ const ProfileForm = ({
           </Fragment>
         )}
 
+        {/* <input
+          type="file"
+          className="btn btn-primary my-1"
+          onChange={handleImage}
+        /> */}
         <input type="submit" className="btn btn-primary my-1" />
         <Link className="btn btn-light my-1" to="/dashboard">
           Go Back
         </Link>
 
-        <input
-          type="file"
-          className="btn btn-primary my-1"
-          onChange={handleImage}
-        />
         {/* <Link className="btn btn-light my-1" to="/dashboard">
           Go Back
         </Link> */}
