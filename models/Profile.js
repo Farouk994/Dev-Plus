@@ -14,6 +14,10 @@ const ProfileSchema = new mongoose.Schema({
   location: {
     type: String
   },
+  image: {
+    url: String,
+    public_id: String,
+ },
   status: {
     type: String,
     required: true

@@ -3,6 +3,7 @@ import { Link, useMatch, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile, getCurrentProfile } from '../../actions/profile';
+import axios from 'axios';
 
 /*
   NOTE: declare initialState outside of component
@@ -12,6 +13,7 @@ import { createProfile, getCurrentProfile } from '../../actions/profile';
 const initialState = {
   company: '',
   website: '',
+  image: '',
   location: '',
   status: '',
   skills: '',
@@ -28,8 +30,12 @@ const ProfileForm = ({
   profile: { profile, loading },
   createProfile,
   getCurrentProfile
+  // handleImage
 }) => {
   const [formData, setFormData] = useState(initialState);
+
+  const [logo, setLogo] = useState({});
+  const [uploading, setUploading] = useState(false);
 
   const creatingProfile = useMatch('/create-profile');
 
@@ -80,6 +86,30 @@ const ProfileForm = ({
   const onSubmit = (e) => {
     e.preventDefault();
     createProfile(formData, navigate, profile ? true : false);
+  };
+
+  const handleImage = async (e) => {
+    const file = e.target.files[0];
+    let formData = new FormData();
+    formData.append('image', file);
+    // formData.append("content", content);
+    console.log([...formData]);
+    setUploading(true);
+    try {
+      const { data } = await axios.post(
+        'http://localhost:5000/api/profile/upload-image',
+        formData
+      );
+      // console.log(data);
+      setLogo({
+        url: data.url,
+        public_id: data.public_id
+      });
+      setUploading(false);
+    } catch (err) {
+      console.log(err.message);
+      setUploading(false);
+    }
   };
 
   return (
@@ -256,6 +286,15 @@ const ProfileForm = ({
         <Link className="btn btn-light my-1" to="/dashboard">
           Go Back
         </Link>
+
+        <input
+          type="file"
+          className="btn btn-primary my-1"
+          onChange={handleImage}
+        />
+        {/* <Link className="btn btn-light my-1" to="/dashboard">
+          Go Back
+        </Link> */}
       </form>
     </section>
   );

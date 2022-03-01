@@ -7,10 +7,20 @@ const { check, validationResult } = require('express-validator');
 // bring in normalize to give us a proper url, regardless of what user entered
 const normalize = require('normalize-url');
 const checkObjectId = require('../../middleware/checkObjectId');
+const cloudinary = require('cloudinary');
+const formidable = require('express-formidable');
 
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 const Post = require('../../models/Post');
+
+require('dotenv').config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 // @route    GET api/profile/me
 // @desc     Get current users profile
@@ -277,5 +287,27 @@ router.get('/github/:username', async (req, res) => {
     return res.status(404).json({ msg: 'No Github profile found' });
   }
 });
+
+// Upload Image
+router.post(
+  '/upload-image',
+  formidable({ maxFileSize: 5 * 1024 * 1024 }),
+  async (req, res) => {
+    try {
+      const result = await cloudinary.uploader.upload(req.files.image.path);
+      res.json({
+        url: result.secure_url,
+        public_id: result.public_id
+      });
+      console.log(req.body);
+      console.log(result);
+    } catch (err) {
+      console.log(err.message);
+      // res.status(500).send('Server Error');
+    }
+  }
+);
+
+module.exports = router;
 
 module.exports = router;

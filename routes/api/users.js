@@ -6,10 +6,18 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
 const normalize = require('normalize-url');
+const cloudinary = require('cloudinary');
+const formidable = require('express-formidable');
 
 const User = require('../../models/User');
 
 require('dotenv').config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 // @route    POST api/users
 // @desc     Register user
@@ -82,5 +90,23 @@ router.post(
     }
   }
 );
+
+// // Upload Image
+// router.post(
+//   '/upload-image',
+//   formidable({ maxFileSize: 5 * 1024 * 1024 }),
+//   async (req, res) => {
+//     try {
+//       const res = await cloudinary.uploader.upload(req.files.image.path);
+//       res.json({
+//         url: res.secure_url,
+//         public_id: res.public_id
+//       });
+//     } catch (err) {
+//       console.log(err.message);
+//       res.status(500).json('Server Error');
+//     }
+//   }
+// );
 
 module.exports = router;

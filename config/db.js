@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const config = require('config');
-const db = config.get('mongoURI');
+// const config = require('config');
+// const db = config.get('mongoURI');
 
 require("dotenv").config();
 
@@ -10,12 +10,13 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false,
-      useUnifiedTopology: true,
+      useUnifiedTopology: true
     });
-    console.log('MongoDB connected <===');
+
+    console.log('MongoDB Connected...');
   } catch (err) {
-    console.log(err.message);
-    //Exit process with failure
+    console.error(err.message);
+    // Exit process with failure
     process.exit(1);
   }
 };

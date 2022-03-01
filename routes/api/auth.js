@@ -8,7 +8,7 @@ const { check, validationResult } = require('express-validator');
 
 const User = require('../../models/User');
 
-require('dotenv').config();
+require("dotenv").config()
 
 // @route    GET api/auth
 // @desc     Get user by token
@@ -63,7 +63,7 @@ router.post(
 
       jwt.sign(
         payload,
-        process.env.JWT_SECRET,
+       process.env.JWT_SECRET,
         { expiresIn: '5 days' },
         (err, token) => {
           if (err) throw err;

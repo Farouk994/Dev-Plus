@@ -9,7 +9,8 @@ import {
   CLEAR_PROFILE,
   ACCOUNT_DELETED,
   GET_REPOS,
-  NO_REPOS
+  NO_REPOS,
+  UPLOAD_IMAGE
 } from './types';
 
 /*
@@ -87,6 +88,36 @@ export const getGithubRepos = (username) => async (dispatch) => {
     });
   }
 };
+
+// Upload Image
+// export const handleImage = async (e, dispatch) => {
+//   const file = e.target.files[0];
+//   let formData = new FormData();
+//   formData.append('image', file);
+//   console.log([...formData]);
+//   // setUploading(true);
+//   try {
+//     const res = await api.post('/upload-image', formData);
+
+//     dispatch({
+//       type: UPLOAD_IMAGE,
+//       payload: res.data
+//     });
+//     console.log(res.data)
+//   } catch (err) {
+//     console.log(err.message);
+//     const errors = err.response.data.errors;
+
+//     if (errors) {
+//       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+//     }
+
+//     dispatch({
+//       type: PROFILE_ERROR,
+//       payload: { msg: err.response.statusText, status: err.response.status }
+//     });
+//   }
+// };
 
 // Create or update profile
 export const createProfile =
