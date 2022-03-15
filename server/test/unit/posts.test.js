@@ -49,7 +49,7 @@ describe('Get all Profiles', () => {
         );
       });
   });
-  
+
   it('POST /profile/new should add new profile ', () => {});
   it('POST /posts/new should new post ', () => {});
-});
+})
