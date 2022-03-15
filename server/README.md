@@ -2,7 +2,7 @@
 # Dev+
 
 <p align="center"> 
-<img src="../client/public/images/home.JPG" alt= "coursely logo" width= "500px">
+<img src="../client/public/images/home.JPG" alt= "logo" width= "500px">
 </p>
 
 <p align="center">
@@ -26,10 +26,10 @@
 -  [License](#license)
 
 ## Description
+Dev+ is an website that helps developers create accounts and build a profile that includes their previous employment and also education, developers can post and also comment on other developers' post. This project is still work in progress. 
 
-You are enrolled in a school and want to be checking in on your reports and results for the school and class that you are in, you want to have a functionality to be able to download the report and also set up an account that will give access to your school reports in the future so that you don't have to be collecting papers or even keeping track of your emails 
-
-Coursely is an online application that helps students to have a connection and access with their school by accessing reports on a yearly basis and also have access to course materials to enable students keep track of what areas they would like to succeed in. Teachers are able to post and update reports basing on the academic term and also through online tests attempted by students
+## Moving Forward
+I will be adding web sockets by adding a feature that allows developers chat with each other and build teams amongst themselves. Developers will also have access to sharing code snippets amongst themselves and also share projects amongst themselves
 
 ### User Story:
 
@@ -87,7 +87,7 @@ A first time user opens the website and then creates an account and then fills i
 </details>
 
 ## App Demo 
- <!-- <img src="./Coursely/client/public/images/0Demo.gif" alt= "downloaddoc">
+ <!-- <img src="./client/public/images/0Demo.gif" alt= "downloaddoc">
 </details> -->
 
 ### Tips
